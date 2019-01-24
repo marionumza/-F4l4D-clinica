@@ -5,6 +5,7 @@ import datetime
 
 class ClaimWizard(models.TransientModel):
     _name = 'dental.claim.wizard'
+    _description = "Dental Claim Wizard"
     
     to_date = fields.Date(string='To Date')
     from_date = fields.Date(string='From Date')

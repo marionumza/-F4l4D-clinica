@@ -11,6 +11,7 @@ import time
 
 class ClaimManagement(models.Model):
     _name = 'dental.insurance.claim.management'
+    _description = 'Dental Insurance Claim Management'
      
     claim_date = fields.Date(string='Claim Date')
     name = fields.Many2one('medical.patient',string='Patient')
@@ -22,6 +23,7 @@ class ClaimManagement(models.Model):
 #     ,domain="[('is_patient', '=', True)]"
 class InsurancePlan(models.Model):
     _name = 'medical.insurance.plan'
+    _description = 'Medical Insurance Plan'
     
     @api.multi
     @api.depends('name', 'code')
@@ -40,6 +42,7 @@ class InsurancePlan(models.Model):
     
 class MedicalInsurance(models.Model):
     _name = "medical.insurance"
+    _description = "Medical Insurance"
     
     @api.multi
     @api.depends('number', 'company_id')
@@ -210,7 +213,7 @@ class MedicalMedicationTemplate(models.Model):
     form = fields.Many2one('medical.drug.form','Form',help="Drug form, such as tablet or gel")
     qty = fields.Integer('x', default=1, help="Quantity of units (eg, 2 capsules) of the medicament")
     common_dosage = fields.Many2one('medical.medication.dosage','Frequency',help="Common / standard dosage frequency for this medicament")
-    frequency = fields.Integer('Frequency', help="Time in between doses the patient must wait (ie, for 1 pill each 8 hours, put here 8 and select 'hours' in the unit field")
+    frequency = fields.Integer('Duration', help="Time in between doses the patient must wait (ie, for 1 pill each 8 hours, put here 8 and select 'hours' in the unit field")
     frequency_unit = fields.Selection([
         ('seconds','seconds'),
         ('minutes','minutes'),
@@ -329,6 +332,7 @@ class MedicalMedicament(models.Model):
 
 class MedicalSpeciality(models.Model):
     _name = "medical.speciality"
+    _description = "Medical Speciality"
     
     name = fields.Char('Description', size=128, required=True,help="ie, Addiction Psychiatry")
     code = fields.Char('Code', size=128, help="ie, ADP")
@@ -351,7 +355,7 @@ class MedicalPhysician(models.Model):
     
     name = fields.Many2one('res.partner','Physician',required=True, domain=[('is_doctor', '=', "1"),('is_person', '=', "1")], help="Physician's Name, from the partner list")
     institution = fields.Many2one('res.partner','Institution',domain=[('is_institution', '=', "1")],help="Institution where she/he works")
-    code = fields.Char('ID', size=128, help="MD License ID")
+    code = fields.Char('Physician ID', size=128, help="MD License ID")
     speciality = fields.Many2one('medical.speciality','Specialty',required=True, help="Specialty Code")
     info = fields.Text('Extra info')
     user_id = fields.Many2one('res.users',related='name.user_id',string='Physician User',store=True)
@@ -360,6 +364,7 @@ class MedicalPhysician(models.Model):
 class MedicalFamilyCode(models.Model):
     
     _name = "medical.family_code"
+    _description = "Medical Family Code"
     
     name = fields.Many2one('res.partner','Name', required=True,help="Family code within an operational sector")
     members_ids = fields.Many2many('res.partner', 'family_members_rel','family_id','members_id', 'Members',domain=[('is_person', '=', "1")])
@@ -545,12 +550,12 @@ class MedicalPatient(models.Model):
     
     name = fields.Many2one('res.partner', 'Patient', required="1", domain=[('is_patient', '=', True), ('is_person', '=', True)], help="Patient Name")
     patient_id = fields.Char('Patient ID', size=64, help="Patient Identifier provided by the Health Center. Is not the patient id from the partner form", default=lambda self: _('New'))
-    ssn = fields.Char('SSN', size=128, help="Patient Unique Identification Number")
+    ssn = fields.Char('UIN', size=128, help="Patient Unique Identification Number")
     lastname = fields.Char(related='name.lastname', string='Lastname')
     middle_name = fields.Char(related='name.middle_name', string='Middle Name')
     family_code = fields.Many2one ('medical.family_code', 'Family', help="Family Code")
     identifier = fields.Char(string='SSN',related='name.ref', help="Social Security Number or National ID")
-    current_insurance =  fields.Many2one ('medical.insurance', "Insurance", domain="[('name','=',name)]", help="Insurance information. You may choose from the different insurances belonging to the patient")
+    current_insurance =  fields.Many2one ('medical.insurance', "Insurance1", domain="[('name','=',name)]", help="Insurance information. You may choose from the different insurances belonging to the patient")
     sec_insurance =  fields.Many2one ('medical.insurance', "Insurance", domain="[('name','=',name)]", help="Insurance information. You may choose from the different insurances belonging to the patient")
     dob =  fields.Date ('Date of Birth')
     age = fields.Char(compute='_patient_age' , string='Patient Age',help="It shows the age of the patient in years(y), months(m) and days(d).\nIf the patient has died, the age shown is the age at time of death, the age corresponding to the date on the death certificate. It will show also \"deceased\" on the field")
@@ -562,8 +567,8 @@ class MedicalPatient(models.Model):
     medications = fields.One2many('medical.patient.medication', 'name', 'Medications')
     prescriptions = fields.One2many ('medical.prescription.order', 'name', "Prescriptions")
     diseases_ids = fields.One2many ('medical.patient.disease', 'name', 'Diseases')
-    critical_info = fields.Text(compute='_medical_alert' , string='Medical Alert',help="Write any important information on the patient's disease, surgeries, allergies, ...")
-    medical_history = fields.Text ('Medical History')
+    critical_info = fields.Text(compute='_medical_alert' , string='Medical Alert1',help="Write any important information on the patient's disease, surgeries, allergies, ...")
+    medical_history = fields.Text ('Medical History1')
     critical_info_fun = fields.Text(compute='_medical_alert' , string='Medical Alert',help="Write any important information on the patient's disease, surgeries, allergies, ...")
     medical_history_fun = fields.Text ('Medical History')
     general_info = fields.Text ('General Information', help="General information about the patient")
@@ -584,35 +589,35 @@ class MedicalPatient(models.Model):
     patient_complaint_ids = fields.One2many('patient.complaint', 'patient_id')
     receiving_treatment = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '1. Are you currently receiving treatment from a doctor hospital or clinic ?')
     receiving_medicine = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '2. Are you currently taking any prescribed medicines(tablets, inhalers, contraceptive or hormone) ?')
-    medicine_yes = fields.Char('Note')
+    medicine_yes = fields.Char('Medicine Note')
     have_card = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '3. Are you carrying a medical warning card ?')
-    card_yes = fields.Char('Note')
+    card_yes = fields.Char('Card Note')
     have_allergies = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '4. Do you suffer from any allergies to any medicines (penicillin) or substances (rubber / latex or food) ?')
-    allergies_yes = fields.Char('Note')
+    allergies_yes = fields.Char('Allergies Note')
     have_feaver = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '5. Do you suffer from hay fever or eczema ?')
     have_ashtham = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '6. Do you suffer from bronchitis, asthma or other chest conditions ?')
     have_attacks = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '7. Do you suffer from fainting attacks, giddlness, blackouts or epllepsy ?')
-    attacks_yes = fields.Char('Note')
+    attacks_yes = fields.Char('Attacks Note')
     have_heart = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '8. Do you suffer from heart problems, angina, blood pressure problems, or stroke ?')
-    heart_yes = fields.Char('Note')
+    heart_yes = fields.Char('Heart Note')
     have_diabetic = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '9. Are you diabetic(or is anyone in your family) ?')
     have_arthritis = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '10. Do you suffer from arthritis ?')
     have_bleeding = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '11. Do you suffer from bruising or persistent bleeding following injury, tooth extraction or surgery ?')
-    bleeding_yes = fields.Char('Note')
+    bleeding_yes = fields.Char('Bleeding Note')
     have_infectious = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '12. Do you suffer from any infectious disease (including HIV and Hepatitis) ?')
-    infectious_yes = fields.Char('Note')
+    infectious_yes = fields.Char('Infectious Note')
     have_rheumatic = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '13. Have you ever had rheumatic fever or chorea ?')
     have_liver = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '14. Have you ever had liver disease (e.g jundice, hepatitis) or kidney disease ?')
     have_serious = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '15. Have you ever had any other serious illness ?')
     have_reaction = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '16. Have you ever had a bad reaction to general or local anaesthetic ?')
-    reaction_yes = fields.Char('Note')
+    reaction_yes = fields.Char('Reaction Note')
     have_surgery = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '17. Have you ever had heart surgery ?')
-    surgery_yes = fields.Char('Note')
+    surgery_yes = fields.Char('Surgery Note')
     have_tabacco = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '18. Do you smoke any tabacco products now (or in the past ) ?')
     have_gutkha = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '19. Do you chew tabacco, pan, use gutkha or supari now (or in the past) ?')
     have_medicine = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '20. Is there any other information which your dentist might need to know about, such as self-prescribe medicine (eg. aspirin) ?')
     have_pregnant = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '21. Are you currently pregnant ?')
-    pregnant_yes = fields.Char('Note')
+    pregnant_yes = fields.Char('Pregnant Note')
     have_breastfeeding = fields.Selection([('YES', 'YES'), ('NO', 'NO'), ], '22. Are you currently breastfeeding ?')
     updated_date = fields.Date ('Updated Date')
     arebic = fields.Boolean('Arabic')
@@ -1008,6 +1013,7 @@ class MedicalPatient(models.Model):
         
 class PatientNationality(models.Model):
     _name = "patient.nationality"
+    _description = "Patient Nationality"
     
     name = fields.Char('Name', required=True)
     code = fields.Char('Code')
@@ -1058,6 +1064,7 @@ class MedicalPatientDisease(models.Model):
 
 class MedicalDoseUnit(models.Model):
     _name = "medical.dose.unit"
+    _description = "Medical Drug Unit"
     
     name = fields.Char('Unit',size=32,required=True,)
     desc = fields.Char('Description',size=64)
@@ -1068,6 +1075,7 @@ class MedicalDoseUnit(models.Model):
 
 class MedicalDrugRoute(models.Model):
     _name = "medical.drug.route"
+    _description = "Medical Drug Route"
     
     name = fields.Char('Route',size=64, required=True)
     code = fields.Char('Code',size=32)
@@ -1078,6 +1086,7 @@ class MedicalDrugRoute(models.Model):
 
 class MedicalDrugForm(models.Model):
     _name = "medical.drug.form"
+    _description = "Medical Drug Form"
     
     name = fields.Char('Form',size=64, required=True,)
     code = fields.Char('Code',size=32)
@@ -1088,6 +1097,7 @@ class MedicalDrugForm(models.Model):
 
 class MedicalMedicinePrag(models.Model):
     _name = "medical.medicine.prag"
+    _description = "Medical Medicine"
     
     name = fields.Char('Form',size=64, required=True,)
     code = fields.Char('Code',size=32)
@@ -1111,6 +1121,7 @@ class MedicalMedicationDosage(models.Model):
 class MedicalAppointment(models.Model):
     _name = "medical.appointment"
     _order = "appointment_sdate desc"
+    _description = "Medical Appointment"
      
     @api.model
     def _get_default_doctor(self):
@@ -1413,6 +1424,7 @@ class MedicalPrescriptionLine (models.Model):
 # HEALTH CENTER / HOSPITAL INFRASTRUCTURE
 class MedicalHospitalBuilding(models.Model):
     _name = "medical.hospital.building"
+    _description = "Medical Hospital Building"
      
     name = fields.Char('Name', size=128, required=True,help="Name of the building within the institution")
     institution = fields.Many2one('res.partner','Institution', domain=[('is_institution', '=', "1")],help="Medical Center")
@@ -1421,6 +1433,7 @@ class MedicalHospitalBuilding(models.Model):
     
 class MedicalHospitalUnit(models.Model):
     _name = "medical.hospital.unit"
+    _description = "Medical Hospital Unit"
      
     name = fields.Char('Name', size=128,required=True, help="Name of the unit, eg Neonatal, Intensive Care, ...")
     institution = fields.Many2one('res.partner','Institution', domain=[('is_institution', '=', "1")],help="Medical Center")
@@ -1429,6 +1442,7 @@ class MedicalHospitalUnit(models.Model):
 
 class MedicalHospitalOpratingRoom(models.Model):
     _name = "medical.hospital.oprating.room"
+    _description = "Medical Hospital Oprating Room"
       
     name = fields.Char('Name',size=128, required=True, help='Name of the Operating Room')
     institution = fields.Many2one('res.partner', 'Institution',domain=[('is_institution', '=', True)], help='Medical Center')
@@ -1589,6 +1603,7 @@ class MedicalTeethTreatment(models.Model):
 
 class PatientBirthdayAlert(models.Model):
     _name = "patient.birthday.alert"
+    _description = "Patient Birthday Alert"
     
     patient_id = fields.Many2one('medical.patient', 'Patient ID',readonly=True)
     dob = fields.Date('DOB',readonly=True)
@@ -1597,6 +1612,7 @@ class PatientBirthdayAlert(models.Model):
 
 class pland_visit_alert(models.Model):
     _name = "planned.visit.alert"
+    _description = "Planned Visit Alert"
     
     patient_name = fields.Many2one('medical.patient', 'Patient Name',readonly=True)
     treatment_name = fields.Many2one('product.product', 'Treatment Name',readonly=True)
@@ -1605,6 +1621,7 @@ class pland_visit_alert(models.Model):
     
 class patient_complaint(models.Model):
     _name = "patient.complaint"
+    _description = "Patient Complaint"
     
     patient_id = fields.Many2one('medical.patient', 'Patient ID', required=True)
     complaint_subject = fields.Char('Complaint Subject', required=True)

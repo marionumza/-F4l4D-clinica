@@ -924,7 +924,7 @@
 								<field name="family_code" />
 								<field name="blood_type" />
 								<field name="rh" />
-								<field name="current_insurance" />
+								<field name="current_insurance" string="Insurance"/>
 								<field name="marital_status" />
 								<field name="occupation_id" />
 								<field name="primary_doctor_id" />
@@ -1024,8 +1024,8 @@
 						<page string="Medical  Alert" class="medical_alert_class"
 							attrs="{'invisible':[('critical_info', '=', False),('medical_history','=',False)]}">
 							<group colspan="4">
-								<field name="critical_info" />
-								<field name="medical_history" />
+								<field name="critical_info" string="Medical Alert"/>
+								<field name="medical_history" string="Medical History" />
 							</group>
 						</page>
 						<page string="Prescriptions">

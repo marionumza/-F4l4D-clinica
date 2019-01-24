@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 
 class ClaimReport(models.AbstractModel):
     _name='report.pragtech_dental_management.claim_report'
+    _description = "Claim Report"
     
     @api.multi
     def _get_report_values(self, docids, data=None):

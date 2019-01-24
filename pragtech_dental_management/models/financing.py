@@ -9,6 +9,7 @@ from odoo.exceptions import UserError, RedirectWarning, ValidationError
 
 class FinancingAgreement(models.Model):
     _name = 'financing.agreement'
+    _description = 'Financing Agreement'
     
     type_of_service =  fields.Char('Type of Service')
     date_of_service =  fields.Date('Date of Service')
@@ -72,6 +73,7 @@ class FinancingAgreement(models.Model):
 
 class PaymentSchedule(models.Model):
     _name = 'payment.schedule'
+    _description = 'Payment Schedule'
     
     name =  fields.Char('Name')
     date =  fields.Date('Date')

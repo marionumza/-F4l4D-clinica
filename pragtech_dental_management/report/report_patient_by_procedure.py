@@ -11,6 +11,7 @@ from dateutil.relativedelta import relativedelta
 class ReportPatientByProcedure(models.AbstractModel):
 
     _name = 'report.pragtech_dental_management.report_patient_by_procedure'
+    _description = 'Report Patient Procedure'
     
     def get_patient_procedure(self, start_date, end_date):
         history_ids = self.env['account.invoice'].search([('date_invoice', '>=', start_date),('date_invoice', '<=', end_date),('state','in',['open','draft'])])

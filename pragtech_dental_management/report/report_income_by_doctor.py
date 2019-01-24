@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 class ReportIncomeByDoctor(models.AbstractModel):
 
     _name = 'report.pragtech_dental_management.report_income_by_doctor'
+    _description = 'Report of doctor income'
 
     def fetch_record(self, start_date, end_date):
         invoice_ids=self.env['account.invoice'].search([('date_invoice','>=',start_date),('date_invoice','<=',end_date),('dentist','!=',False),('state','in',['open','paid']),('type','=','out_invoice')])
@@ -80,6 +81,7 @@ class ReportIncomeByDoctor(models.AbstractModel):
 class ReportPatientByDoctor(models.AbstractModel):
 
     _name = 'report.pragtech_dental_management.patient_doctor'
+    _description = 'Report Of Patent Doctor'
     
     def fetch_record(self, start_date, end_date):
         invoice_ids=self.env['account.invoice'].search([('date_invoice','>=',start_date),('date_invoice','<=',end_date),('dentist','!=',False),('state','in',['open','paid']),('type','=','out_invoice')])

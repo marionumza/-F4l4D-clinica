@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 class ReportIncomeByInsurance(models.AbstractModel):
 
     _name = 'report.pragtech_dental_management.income_by_insurance'
+    _description = 'Report Income By Insurance'
 
     def get_income_insurance_company(self,start_date, end_date, insurance_company):
         history_ids = self.env['account.invoice'].search([('date_invoice', '>=', start_date),('date_invoice', '<=', end_date),('state','in',['open','draft'])])

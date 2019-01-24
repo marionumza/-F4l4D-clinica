@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 
 class income_by_doctor_report_wizard(models.TransientModel):
     _name='income.by.doctor.report.wizard'
+    _description = 'Income By Doctor Report Wizard'
    
     start_date = fields.Date('Start Date',required=True)
     end_date = fields.Date('End Date',required=True)
@@ -21,6 +22,7 @@ class income_by_doctor_report_wizard(models.TransientModel):
 
 class patient_by_doctor_report_wizard(models.TransientModel):
     _name='patient.by.doctor.report.wizard'
+    _description = 'Patient By Doctor Report Wizard'
    
     start_date = fields.Date('Start Date',required=True)
     end_date = fields.Date('End Date',required=True)

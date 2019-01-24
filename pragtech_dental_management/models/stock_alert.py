@@ -18,6 +18,7 @@ class ResUsers(models.Model):
 
 class PurchaseReportScheduler(models.Model):
     _name='purchase.report.scheduler'
+    _description = "Purchase Report Scheduler"
   
     
 #################    Negative Stock Alert   ####################### 

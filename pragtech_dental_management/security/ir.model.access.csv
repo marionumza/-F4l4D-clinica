@@ -135,3 +135,4 @@ access_payment_schedule_doc,payment.schedule,model_payment_schedule,group_dental
 access_medical_occupation_doc,medical.occupation,model_medical_occupation,group_dental_doc_menu,1,1,1,1
 access_chart.selection_doc,chart.selection,model_chart_selection,group_dental_doc_menu,1,1,1,1
 access_medical_medicine_prag,access_medical_medicine_prag,model_medical_medicine_prag,,1,1,1,0
+access_dental_insurance_claim_management,access_dental_insurance_claim_management,model_dental_insurance_claim_management,base.group_system,1,1,1,1

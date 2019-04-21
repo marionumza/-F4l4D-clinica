@@ -230,9 +230,7 @@
 			<field name="res_model">medical.appointment</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">calendar,tree,form</field>
-			<field name="domain">[('appointment_sdate','&gt;=',time.strftime('%Y-%m-%d
-				00:00:01')),('appointment_sdate','&lt;=',time.strftime('%Y-%m-%d
-				23:59:59'))]
+			<field name="domain">[]
 			</field>
 		</record>
 
